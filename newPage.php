@@ -13,7 +13,7 @@
         <input type="text" name="name" />
     </p>
     <p>
-        <label>Комментарий:</label>
+        <label>Комментарий: </label>
         <br />
         <textarea name="text_comment" cols="30" rows="10"></textarea>
     </p>
