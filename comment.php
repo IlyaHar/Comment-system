@@ -1,15 +1,32 @@
 <?php
-	/* Принимаем данные из формы */
-	$name = $_POST["name"];
-	$page_id = $_POST["page_id"];
-	$text_comment = $_POST["text_comment"];
+session_start();
+unset($_SESSION['error_name']);
+unset($_SESSION['error_comment']);
+unset($_SESSION['success']);
+unset($_SESSION['name']);
+unset($_SESSION['comment']);
+require 'helpers.php';
+$name = htmlspecialchars(trim($_POST['name']));
+$comment = htmlspecialchars(trim($_POST['comment']));
+$page_id = $_POST['page_id'];
+$_SESSION['name'] = $name;
+$_SESSION['comment'] = $comment;
 
-	$name = htmlspecialchars($name);// Преобразуем спецсимволы в HTML-сущности
-	$text_comment = htmlspecialchars($text_comment);// Преобразуем спецсимволы в HTML-сущности
+$mysql = new mysqli('localhost', 'root', '', 'php-mysql');
 
-	$mysqli = new mysqli("localhost", "root", "", "php-mysql");// Подключается к базе данных
+if (mb_strlen($name) <= 2) {
+    if (empty($name )) {
+        $_SESSION['error_name'] =  "Введите имя!";
+    } else
+    $_SESSION['error_name'] =  "Имя : $name не существует!";
+} elseif (mb_strlen($comment) < 15) {
+    $_SESSION['error_comment'] = 'Комментарий должен быть не менее 15 символов!';
+} else {
+    unset($_SESSION['name']);
+    unset($_SESSION['comment']);
+    $_SESSION['success'] = 'Комментарий успешно опубликован!';
+    $mysql->query("INSERT INTO comments (`name`, `comment`, `page_id`) VALUES ('$name', '$comment', $page_id)");
+}
 
-	$mysqli->query("INSERT INTO `comments` (`name`, `page_id`, `text_comment`) VALUES ('$name', '$page_id', '$text_comment')"); // Добавляем комментарий в таблицу
-
-	header("Location: ".$_SERVER["HTTP_REFERER"]);// Делаем реридект обратно
-?>
+redirect();
+$mysql->close();
