@@ -1,0 +1,16 @@
+.comment__form {
+    margin-left: 350px;
+    margin-top: 20px;
+    padding-bottom: 50px;
+}
+
+.comment__block {
+    margin-top: 20px;
+    padding: 15px 15px 15px 15px;
+    width: 500px;
+    margin-left: 400px;
+}
+
+footer {
+    margin-top: 500px;
+}
